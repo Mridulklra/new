@@ -1,31 +1,19 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-   url      = env("DATABASE_URL")
 }
 
-//authenticated-users model
-model User {
-  id        String     @id // Supabase auth user ID
-  email     String     @unique
-  name      String?
-  profile   String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  bookmarks Bookmark[]
-}
-
-//Book mark model
 model Bookmark {
   id        String   @id @default(uuid())
-  title     String
+  userId    String   @map("user_id")
   url       String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  title     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("bookmarks")
 }
